@@ -1,10 +1,10 @@
 # cy
-parse and execute expression
+simplified language interperter
 
-**【编译】**  
+**【compile】**  
 > cd script && ./make.sh
 
-**【运行demo】**
+**【run demo】**
 > cd bin  
 > ./cy ../demo/operator.cy  
 > ./cy ../demo/mul_9_9.cy  
