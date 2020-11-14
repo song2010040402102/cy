@@ -118,14 +118,31 @@ func readFile(filename string) ([]string, error) {
 	}
 	defer f.Close()
 
+	count := 0
 	rd := bufio.NewReader(f)
 	for {
 		line, err := rd.ReadString('\n')
 		if len(line) > 0 && line[len(line)-1] == '\n' {
 			line = line[:len(line)-1]
+			if len(line) > 0 && line[len(line)-1] == '\r' {
+				line = line[:len(line)-1]
+			}
+		}
+		if index := strings.Index(line, "//"); index >= 0 {
+			line = line[:index]
+		} else if index = strings.Index(line, "/*"); index >= 0 {
+			count++
+			line = line[:index]
+		} else if index = strings.Index(line, "*/"); index >= 0 && count > 0 {
+			count--
+			if index < len(line)-2 {
+				line = line[index+2:]
+			} else {
+				line = ""
+			}
 		}
 		line = removeSideBlank(line)
-		if len(line) > 0 {
+		if count == 0 && len(line) > 0 {
 			lines = append(lines, line)
 		}
 		if err == io.EOF {
