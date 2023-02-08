@@ -1,5 +1,7 @@
 package clp
 
+//import "fmt"
+
 //规范语义表，也可以类似C语言定义错误表，给出警告提示，但不利于代码规范化
 var g_mapSemNorm map[int][][]int = map[int][][]int{
 	OP_NOT:  [][]int{{VT_BOOL}},
@@ -16,11 +18,11 @@ var g_mapSemNorm map[int][][]int = map[int][][]int{
 	OP_SUB:  [][]int{{VT_INT, VT_INT}, {VT_FLOAT, VT_FLOAT}, {VT_INT, VT_FLOAT}, {VT_FLOAT, VT_INT}},
 	OP_SFL:  [][]int{{VT_INT, VT_INT}},
 	OP_SFR:  [][]int{{VT_INT, VT_INT}},
-	OP_EQ:   [][]int{{VT_BOOL, VT_BOOL}, {VT_INT, VT_INT}, {VT_FLOAT, VT_FLOAT}, {VT_INT, VT_FLOAT}, {VT_FLOAT, VT_INT}, {VT_CHAR, VT_CHAR}, {VT_STRING, VT_STRING}},
 	OP_GE:   [][]int{{VT_INT, VT_INT}, {VT_FLOAT, VT_FLOAT}, {VT_INT, VT_FLOAT}, {VT_FLOAT, VT_INT}, {VT_CHAR, VT_CHAR}},
 	OP_GT:   [][]int{{VT_INT, VT_INT}, {VT_FLOAT, VT_FLOAT}, {VT_INT, VT_FLOAT}, {VT_FLOAT, VT_INT}, {VT_CHAR, VT_CHAR}},
 	OP_LE:   [][]int{{VT_INT, VT_INT}, {VT_FLOAT, VT_FLOAT}, {VT_INT, VT_FLOAT}, {VT_FLOAT, VT_INT}, {VT_CHAR, VT_CHAR}},
 	OP_LT:   [][]int{{VT_INT, VT_INT}, {VT_FLOAT, VT_FLOAT}, {VT_INT, VT_FLOAT}, {VT_FLOAT, VT_INT}, {VT_CHAR, VT_CHAR}},
+	OP_EQ:   [][]int{{VT_BOOL, VT_BOOL}, {VT_INT, VT_INT}, {VT_FLOAT, VT_FLOAT}, {VT_INT, VT_FLOAT}, {VT_FLOAT, VT_INT}, {VT_CHAR, VT_CHAR}, {VT_STRING, VT_STRING}},
 	OP_NE:   [][]int{{VT_BOOL, VT_BOOL}, {VT_INT, VT_INT}, {VT_FLOAT, VT_FLOAT}, {VT_INT, VT_FLOAT}, {VT_FLOAT, VT_INT}, {VT_CHAR, VT_CHAR}, {VT_STRING, VT_STRING}},
 	OP_BND:  [][]int{{VT_INT, VT_INT}},
 	OP_BXR:  [][]int{{VT_INT, VT_INT}},
@@ -74,7 +76,7 @@ func GetSemType(op int, vts []int) int {
 	if op == OP_CMA {
 		return vts[0]
 	}
-	if op >= OP_EQ && op <= OP_NE {
+	if op >= OP_GE && op <= OP_NE {
 		return VT_BOOL
 	}
 	ret := VT_NONE

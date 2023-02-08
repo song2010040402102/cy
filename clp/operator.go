@@ -21,11 +21,11 @@ const (
 	S_SUB = "-"
 	S_SFL = "<<"
 	S_SFR = ">>"
-	S_EQ  = "=="
 	S_GE  = ">="
 	S_GT  = ">"
 	S_LE  = "<="
 	S_LT  = "<"
+	S_EQ  = "=="
 	S_NE  = "!="
 	S_BND = "&"
 	S_BXR = "^"
@@ -64,11 +64,11 @@ const (
 	OP_SUB
 	OP_SFL
 	OP_SFR
-	OP_EQ
 	OP_GE
 	OP_GT
 	OP_LE
 	OP_LT
+	OP_EQ
 	OP_NE
 	OP_BND
 	OP_BXR
@@ -94,7 +94,7 @@ const (
 )
 
 var g_strOpera []string = []string{S_LDI, S_ADS, S_SBS, S_MLN, S_DVN, S_MDN, S_ADN, S_SBN, S_MUL, S_DIV, S_MOD, S_ADD, S_SUB,
-	S_SLN, S_SRN, S_SFL, S_SFR, S_EQ, S_GE, S_GT, S_LE, S_LT, S_NE, S_AND, S_OR, S_NOT, S_BDN, S_BXN,
+	S_SLN, S_SRN, S_SFL, S_SFR, S_GE, S_GT, S_LE, S_LT, S_EQ, S_NE, S_AND, S_OR, S_NOT, S_BDN, S_BXN,
 	S_BON, S_BND, S_BXR, S_BOR, S_ASN, S_CMA, S_IF, S_SEL}
 
 var g_mapOpera map[string]int = map[string]int{
@@ -109,11 +109,11 @@ var g_mapOpera map[string]int = map[string]int{
 	S_SUB: OP_SUB,
 	S_SFL: OP_SFL,
 	S_SFR: OP_SFR,
-	S_EQ:  OP_EQ,
 	S_GE:  OP_GE,
 	S_GT:  OP_GT,
 	S_LE:  OP_LE,
 	S_LT:  OP_LT,
+	S_EQ:  OP_EQ,
 	S_NE:  OP_NE,
 	S_BND: OP_BND,
 	S_BXR: OP_BXR,

@@ -364,7 +364,7 @@ func (b *Block) lexAnalysis(exp string) ([]*Express, error) {
 	last := 0
 	exps := []*Express{}
 	for i := 0; i <= len(exp); {
-		s, e, err := handleMatch(exp, i)
+		s, e, exp, err := handleMatch(exp, i)
 		if err != nil {
 			return exps, err
 		} else {
@@ -807,52 +807,74 @@ func updateExps(exps []*Express, new *Express, start, end int) []*Express {
 	return ret
 }
 
-func removeBlank(exp string) string {
-	var c byte
-	for i := 0; i < len(exp); i++ {
-		if exp[i] == '\'' || exp[i] == '"' {
-			if c == 0 {
-				c = exp[i]
-			} else if exp[i] == c {
-				c = 0
-			}
-		} else if c == 0 && (exp[i] == ' ' || exp[i] == '	') {
-			exp = exp[:i] + exp[i+1:]
-			i--
-		}
-	}
-	return exp
-}
-
-func handleMatch(exp string, cur int) (int, int, error) {
+func handleMatch(exp string, cur int) (int, int, string, error) {
 	if cur < len(exp) {
 		var c byte = exp[cur]
 		var c2 byte
-		if c == '\'' || c == '"' {
+		if (cur < 1 || exp[cur-1] != '\\') && (c == '\'' || c == '"') {
 			c2 = c
 		} else if c == '(' {
 			c2 = ')'
 		} else {
-			return cur, cur, nil
+			return cur, cur, exp, nil
 		}
-		n := 1
-		for i := cur + 1; i < len(exp); i++ {
-			if c == c2 {
+		if c == c2 {
+			for i := cur + 1; i < len(exp); i++ {
 				if exp[i] == c {
-					n--
-				}
-			} else {
-				if exp[i] == c {
-					n++
-				} else if exp[i] == c2 {
-					n--
+					if i < 1 || exp[i-1] != '\\' {
+						return cur, i + 1, exp, nil
+					} else {
+						exp = exp[:i-1] + exp[i:]
+						i--
+					}
 				}
 			}
-			if n == 0 {
-				return cur, i + 1, nil
+		} else {
+			n := 1
+			var cq byte
+			for i := cur + 1; i < len(exp); i++ {
+				if (i < 1 || exp[i-1] != '\\') && (exp[i] == '\'' || exp[i] == '"') {
+					if cq == 0 {
+						cq = exp[i]
+					} else if cq == exp[i] {
+						cq = 0
+					} else {
+						return 0, 0, "", errors.New(fmt.Sprintf("%s %d %d %c not match quote!", exp, cur, cq, exp[i]))
+					}
+				}
+				if cq == 0 {
+					if exp[i] == c {
+						n++
+					} else if exp[i] == c2 {
+						n--
+					}
+					if n == 0 {
+						return cur, i + 1, exp, nil
+					}
+				}
+			}
+			if cq != 0 {
+				return 0, 0, "", errors.New(fmt.Sprintf("%s %d %d %c not match quote!", exp, cur, cq))
 			}
 		}
-		return 0, 0, errors.New(fmt.Sprintf("%c not match!", c))
+		return 0, 0, "", errors.New(fmt.Sprintf("%s %d %d %c not match!", exp, cur, c))
 	}
-	return cur, cur, nil
+	return cur, cur, exp, nil
+}
+
+func removeBlank(s string) string {
+	var c byte
+	for i := 0; i < len(s); i++ {
+		if (i < 1 || s[i-1] != '\\') && (s[i] == '\'' || s[i] == '"') {
+			if c == 0 {
+				c = s[i]
+			} else if s[i] == c {
+				c = 0
+			}
+		} else if c == 0 && (s[i] == ' ' || s[i] == '\t') {
+			s = s[:i] + s[i+1:]
+			i--
+		}
+	}
+	return s
 }

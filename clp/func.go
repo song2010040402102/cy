@@ -2,12 +2,15 @@ package clp
 
 import (
 	"fmt"
+	"math"
 	"time"
 )
 
 const (
 	S_FUNC    = "func"
 	S_PRINT   = "print"
+	S_POW     = "pow"
+	S_TIME    = "time"
 	S_TIME2TS = "time2ts"
 	S_TS2TIME = "ts2time"
 	S_DATE2TS = "date2ts"
@@ -28,6 +31,8 @@ type Function struct {
 //函数表
 var g_funcs []*Function = []*Function{
 	&Function{S_PRINT, nil, VT_NONE, SysPrint, 0},
+	&Function{S_POW, []int{VT_FLOAT, VT_FLOAT}, VT_FLOAT, SysPow, 0},
+	&Function{S_TIME, nil, VT_INT, SysTime, 0},
 	&Function{S_TIME2TS, []int{VT_STRING}, VT_INT, SysTime2TS, 0},
 	&Function{S_TS2TIME, []int{VT_INT}, VT_STRING, SysTS2Time, 0},
 	&Function{S_DATE2TS, []int{VT_STRING}, VT_INT, SysDate2TS, 0},
@@ -62,6 +67,17 @@ func SysPrint(values ...IValue) IValue {
 	}
 	fmt.Println(iv...)
 	return &ValNone{}
+}
+
+func SysPow(values ...IValue) IValue {
+	if len(values) != 2 {
+		return &ValFloat{0}
+	}
+	return &ValFloat{math.Pow(values[0].GetValue().(float64), values[1].GetValue().(float64))}
+}
+
+func SysTime(values ...IValue) IValue {
+	return &ValInt{time.Now().UnixNano()}
 }
 
 func SysTime2TS(values ...IValue) IValue {

@@ -9,6 +9,16 @@ import (
 	"strings"
 )
 
+func ParseExp(s string) (int, error) {
+	g_rootBlock = NewBlock(BK_TYPE_GLOBAL, nil, nil, NewSymbolTbl(nil))
+	exp, err := g_rootBlock.parseExpress(s)
+	if err != nil {
+		return VT_NONE, err
+	}
+	g_rootBlock.createOpera(exp)
+	return exp.etype, nil
+}
+
 func ParseFile(filename string) error {
 	lines, _ := readFile(filename)
 	if len(lines) == 0 {
