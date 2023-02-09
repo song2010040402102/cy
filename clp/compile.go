@@ -169,21 +169,19 @@ func readFile(filename string) ([]string, error) {
 func removeLeftBlank(s string) string {
 	for i := 0; i < len(s); i++ {
 		if s[i] != ' ' && s[i] != '	' {
-			s = s[i:]
-			break
+			return s[i:]
 		}
 	}
-	return s
+	return ""
 }
 
 func removeRightBlank(s string) string {
 	for i := len(s) - 1; i >= 0; i-- {
 		if s[i] != ' ' && s[i] != '	' {
-			s = s[:i+1]
-			break
+			return s[:i+1]
 		}
 	}
-	return s
+	return ""
 }
 
 func removeSideBlank(s string) string {
